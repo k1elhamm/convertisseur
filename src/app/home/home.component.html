@@ -1,0 +1,40 @@
+<div class="container p-4">
+
+<h6 class="text-center">Live exchange rate</h6>
+<h6 class="text-center">{{rate.toFixed(2)}}</h6>
+
+<form class="form-group text-center" [formGroup]="rateForm" (ngSubmit)="onSubmit()">
+  <input formControlName="forcedRate" placeholder="Enter your rate" class="form-control col-2 mr-auto ml-auto mb-2">
+  <input formControlName="amount" placeholder="Enter your amount" class="form-control col-4 m-auto">
+  <small class="alert-danger" *ngIf="amount.errors && (amount.dirty || amount.touched)"> Please enter a valid amount</small>
+
+  <div class="p-2">
+    {{currencies[0]}}
+    <a (click)="swap()"><img src="assets/img/exchange.png"></a>
+    {{currencies[1]}}
+  </div>
+  <button class="btn btn-primary" [disabled]="rateForm.invalid"> Convert </button>
+  <p class="p-1">{{result}} </p>
+</form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Real exchange rate</th>
+      <th scope="col">Filled exchange rate</th>
+      <th scope="col">Initial value</th>
+      <th scope="col">Calculated value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let conversion of homeService.history | async; index as i">
+      <th scope="row">{{i+1}}</th>
+      <td>{{conversion.realRate}}</td>
+      <td>{{conversion.forcedRate}}</td>
+      <td>{{conversion.amount}} {{conversion.fromCurrency}}</td>
+      <td>{{conversion.calculatedAmount}} {{conversion.toCurrency}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
